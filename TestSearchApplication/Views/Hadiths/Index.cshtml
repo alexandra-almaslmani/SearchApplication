@@ -1,0 +1,52 @@
+﻿@model List<SearchResultItem>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>أحاديث</title>
+</head>
+<body>
+    <h1 style="text-align:center;">أحاديث</h1>
+    <div class="cr-se">
+        @using (Html.BeginForm("Index", "Hadiths", FormMethod.Get))
+        {
+            <b>البحث : </b>
+            @Html.TextBox("searchText") <input type="submit" value="بحث" class="btn btn-success">
+        }
+    </div>
+    <br />
+    @{
+        int rowNo = 0;
+    }
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Text</th>
+                <th>Accuracy</th>
+                <th>MNO</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="6" style="text-align:center;">فارغ</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var result in Model)
+                {
+
+                    <tr>
+                        <td>@(rowNo += 1)</td>
+                        <td>@result.Text</td>
+                        <td>@result.Accuracy</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</body>
+</html>
