@@ -4,20 +4,26 @@ using TestSearchApplication.Models;
 using RapidFuzz.Net;
 using TestSearchApplication.Services.SearchService.Interfaces;
 using TestSearchApplication.Data;
+using TestSearchApplication.ViewModels;
 
 namespace TestSearchApplication.Services.SearchService
 {
     public class SearcherAlgorithm : ISearcher
     {
         private readonly DataMSAccessContext _context;
-        private List<SearchResultItem> _result;
+        private SearchViewModel _searchViewModel;
+
         public SearcherAlgorithm(DataMSAccessContext context)
         {
             _context = context;
+            _searchViewModel = new SearchViewModel
+            {
+                Results = new List<SearchResultItem>()
+            };
         }
+
         public List<SearchResultItem> Search(string searchTerm)
         {
-            _result = new();
             if (searchTerm != null)
             {
                 foreach (Tab b in _context.Tabs)
@@ -32,12 +38,13 @@ namespace TestSearchApplication.Services.SearchService
                     {
                         searchResultItem.Text = b.MhNass;
                         searchResultItem.Accuracy = similarity;
-                        _result.Add(searchResultItem);
+                        searchResultItem.MNO = b.Mno;
+                        _searchViewModel.Results.Add(searchResultItem);
                     }
                 }
-                return _result.OrderByDescending(item => item.Accuracy).ToList(); ;
+                return _searchViewModel.Results.OrderByDescending(item => item.Accuracy).ToList(); ;
             }
-            return _result;
+            return _searchViewModel.Results;
         }
     }
 }

@@ -7,9 +7,6 @@ namespace TestSearchApplication.Data;
 
 public partial class DataMSAccessContext : DbContext
 {
-    public DataMSAccessContext()
-    {
-    }
 
     public DataMSAccessContext(DbContextOptions<DataMSAccessContext> options)
         : base(options)
