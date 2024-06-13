@@ -4,54 +4,81 @@
 <html>
 <head>
     <title>أحاديث</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .spinner {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .table-container {
+            position: relative;
+        }
+    </style>
 </head>
 <body>
     <h1 style="text-align:center;">أحاديث</h1>
     </br>
     <div class="cr-se">
-        @using (Html.BeginForm("Index", "Hadiths", FormMethod.Get))
+        @using (Html.BeginForm("Index", "Hadiths", FormMethod.Get, new { id = "search-form" }))
         {
             <b>البحث : </b>
             <div class="search-bar-with-button">
-                @Html.TextBox("searchText", null, new { @class = "search-bar", placeholder = "ابحث هنا عن الحديث..." })
-                <input type="submit" value="بحث" class="btn btn-success">
+                @Html.TextBox("searchText", null, new { @class = "search-bar", placeholder = "ابحث هنا عن الحديث...",id = "search-input" })
+                <input type="submit" value="بحث" class="btn btn-success" id="search-btn">
             </div>
         }
     </div>
     <br />
-    @{
-        int rowNo = 0;
-    }
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>نص الحديث</th>
-                <th>نسبة الشبه</th>
-                <th>MNO</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Results.Count == 0)
-            {
+    
+    <div class="table-container">
+        <div class="spinner-border text-primary spinner" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <table class="table table-bordered table-hover">
+            <thead>
                 <tr>
-                    <td colspan="6" style="text-align:center;">فارغ</td>
+                    <th>Id</th>
+                    <th>نص الحديث</th>
+                    <th>نسبة الشبه</th>
+                    <th>MNO</th>
                 </tr>
-            }
-            else
-            {
-                foreach (var result in Model.Results)
+            </thead>
+            <tbody id="results-body">
+                @if (Model.Results.Count == 0)
                 {
-
-                    <tr>
-                        <td>@(rowNo += 1)</td>
-                        <td>@result.Text</td>
-                        <td>@result.Accuracy</td>
-                        <td>@result.MNO</td>
+                    <tr id="empty-row">
+                        <td colspan="4" style="text-align:center;">فارغ</td>
                     </tr>
                 }
-            }
-        </tbody>
-    </table>
+                else
+                {
+                    int rowNo = 0;
+                    foreach (var result in Model.Results)
+                    {
+                        <tr>
+                            <td>@(rowNo += 1)</td>
+                            <td>@result.Text</td>
+                            <td>@result.Accuracy</td>
+                            <td>@result.MNO</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#search-form').on('submit', function () {
+                var $spinner = $('.spinner');
+                $spinner.show();
+            });
+        });
+    </script>
 </body>
 </html>

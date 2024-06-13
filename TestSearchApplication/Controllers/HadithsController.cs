@@ -19,7 +19,10 @@ namespace TestSearchApplication.Controllers
         }
         public IActionResult Index(string searchText)
         {
-            _searchViewModel.Results = _searcher.Search(searchText);
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                _searchViewModel.Results = _searcher.Search(searchText, 54724, 0);
+            }
             return View(_searchViewModel);
         }
 

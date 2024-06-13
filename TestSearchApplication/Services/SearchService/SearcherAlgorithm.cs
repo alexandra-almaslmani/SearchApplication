@@ -22,29 +22,31 @@ namespace TestSearchApplication.Services.SearchService
             };
         }
 
-        public List<SearchResultItem> Search(string searchTerm)
+        public List<SearchResultItem> Search(string searchTerm, int batchSize, int batchNumber)
         {
-            if (searchTerm != null)
+            if (!string.IsNullOrEmpty(searchTerm))
             {
-                foreach (Tab b in _context.Tabs)
+                var tabs = _context.Tabs.Skip(batchSize * batchNumber).Take(batchSize).ToList();
+                foreach (Tab b in tabs)
                 {
-                    string updatedText = TextHelper.RemoveDiacritics(b.MhNass); //  data
-                    string updatedSearchTerm = TextHelper.RemoveDiacritics(searchTerm); // search word
+                    string updatedText = TextHelper.RemoveDiacritics(b.MhNass);
+                    string updatedSearchTerm = TextHelper.RemoveDiacritics(searchTerm);
 
                     double similarity = FuzzyMatcher.PartialRatio(updatedSearchTerm, updatedText);
-                    SearchResultItem searchResultItem = new();
-
-                    if (similarity >= 70)
+                    if (similarity >= 90)
                     {
-                        searchResultItem.Text = b.MhNass;
-                        searchResultItem.Accuracy = similarity;
-                        searchResultItem.MNO = b.Mno;
+                        var searchResultItem = new SearchResultItem
+                        {
+                            Text = b.MhNass,
+                            Accuracy = similarity,
+                            MNO = b.Mno
+                        };
                         _searchViewModel.Results.Add(searchResultItem);
                     }
                 }
-                return _searchViewModel.Results.OrderByDescending(item => item.Accuracy).ToList(); ;
             }
-            return _searchViewModel.Results;
+            return _searchViewModel.Results.OrderByDescending(item => item.Accuracy).Skip(batchSize * batchNumber).Take(batchSize).ToList();
         }
     }
+
 }
