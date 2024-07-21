@@ -19,7 +19,7 @@ namespace TestSearchApplication
 
             builder.Services.AddControllers();
             builder.Services.AddDbContext<DataMSAccessContext>(options => {
-                options.UseJet("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=c:\\Users\\pc alhbabb\\Desktop\\SearchApplication\\M&Z_search1.accdb");
+                options.UseJet(builder.Configuration.GetConnectionString("MSAccessConnection"));
             });
 
             var app = builder.Build();
