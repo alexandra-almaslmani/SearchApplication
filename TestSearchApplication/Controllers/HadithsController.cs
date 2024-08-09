@@ -21,7 +21,7 @@ namespace TestSearchApplication.Controllers
         {
             if (!string.IsNullOrEmpty(searchText))
             {
-                _searchViewModel.Results = _searcher.Search(searchText, 54724, 0);
+                _searchViewModel.Results = _searcher.Search(searchText, 65542, 0);
             }
             return View(_searchViewModel);
         }
