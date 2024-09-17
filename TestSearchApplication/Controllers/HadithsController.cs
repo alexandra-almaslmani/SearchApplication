@@ -17,6 +17,7 @@ namespace TestSearchApplication.Controllers
                 Results = new List<SearchResultItem>()
             };
         }
+
         public IActionResult Index(string searchText)
         {
             if (!string.IsNullOrEmpty(searchText))
